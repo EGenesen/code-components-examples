@@ -1,105 +1,70 @@
-# CMS Map - Webflow Code Component
+# CMS Map
 
-A Webflow code component that integrates Mapbox for displaying CMS-driven location data on an interactive map.
+This code component example integrates Mapbox with Webflow CMS collections to display dynamic location data on an interactive map. Perfect for store locators, event maps, or any location-based content.
 
-## Setup
+![](./screenshot/preview.png)
 
-1. Install dependencies:
+## Features
 
-```bash
-npm install
-```
+- **CMS Collection Integration** - Automatically extracts location data from Webflow CMS Collection lists via slot-based architecture
+- **Mapbox GL JS** - Powered by Mapbox for smooth, interactive maps with custom markers
+- **Auto-Fit Bounds** - Automatically adjusts map view to show all markers with configurable padding and zoom limits
+- **Custom Popups** - Display rich HTML content from CMS fields in map marker popups
+- **Configurable Controls** - Control map center, zoom level, bounds fitting, and control positioning
+- **Slot-Based Content** - Accepts any Webflow CMS collection list as a component slot for maximum flexibility
+- **Vite Project Setup** - Fast development experience with Hot Module Replacement (HMR)
 
-2. Create a `.env` file in the root directory:
+## Getting Started
 
-```bash
-cp .env.example .env
-```
+1. Install dependencies: `npm i`
+2. Create a `.env` file in the root directory with your Mapbox API key:
+   ```
+   VITE_MAP_KEY=your_mapbox_api_key_here
+   ```
+   Get your Mapbox API key from [https://account.mapbox.com/](https://account.mapbox.com/)
+3. Run `npx webflow library share` to create a code library for this example in your designated Webflow workspace
 
-3. Add your Mapbox API key to the `.env` file:
+## Component Properties
 
-```
-VITE_MAP_KEY=your_mapbox_api_key_here
-```
+| Prop Name                   | Type      | Default | Description                                                  |
+| --------------------------- | --------- | ------- | ------------------------------------------------------------ |
+| `mapKey`                    | `Text`    | `""`    | Your Mapbox API access token                                 |
+| `centerLat`                 | `Number`  | `0`     | Default latitude for map center                              |
+| `centerLng`                 | `Number`  | `0`     | Default longitude for map center                             |
+| `zoom`                      | `Number`  | `10`    | Default zoom level (0-22)                                    |
+| `fitBounds`                 | `Boolean` | `true`  | Automatically adjust map to fit all markers                  |
+| `fitBoundsPadding`          | `Number`  | `10`    | Padding around markers when auto-fitting (in pixels)         |
+| `fitBoundsMaxZoom`          | `Number`  | `15`    | Maximum zoom level when auto-fitting bounds                  |
+| `controlsVerticalPadding`   | `Number`  | `20`    | Top padding for map controls (in pixels)                     |
+| `controlsHorizontalPadding` | `Number`  | `20`    | Right padding for map controls (in pixels)                   |
+| `MarkersCollection`         | `Slot`    | -       | The slot where you place your Webflow CMS Collection List    |
+| `ShowMarkersCollection`     | `Boolean` | `true`  | Toggle visibility of the CMS collection for editing purposes |
 
-Get your Mapbox API key from [https://account.mapbox.com/](https://account.mapbox.com/)
+## Technical Implementation
 
-## Development
+This component showcases several advanced patterns for Webflow Code Components:
 
-```bash
-npm run dev
-```
+- **Custom Hook (`useCMSCollectionItems`)** - Extracts CMS list items from Webflow slots using Shadow DOM slot APIs
+- **Custom Hook (`useMapbox`)** - Manages Mapbox GL JS instance lifecycle, marker creation, and bounds fitting
+- **Shadow DOM Style Injection** - Uses `useShadowGlobalStyles` hook to inject Webflow styles into the shadow root
+- **Data Attributes** - Reads `data-lat` and `data-lng` attributes from CMS items to position markers
+- **Element Cloning** - Clones popup content from CMS elements to display rich HTML in map popups
+- **Dynamic CSS Variables** - Uses CSS custom properties for flexible control positioning
 
-## React + TypeScript + Vite
+## CMS Collection Structure
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Your CMS collection should include items with the following structure:
 
-Currently, two official plugins are available:
+- A wrapper element with class `marker-pin` that has `data-lat` and `data-lng` attributes
+- Optional: A child element with class `maker-pop-up` containing HTML content to display in the popup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Example CMS item structure:
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```html
+<div class="marker-pin" data-lat="40.7128" data-lng="-74.0060">
+  <div class="maker-pop-up">
+    <h3>Location Name</h3>
+    <p>Location description...</p>
+  </div>
+</div>
 ```

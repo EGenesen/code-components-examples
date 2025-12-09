@@ -46,7 +46,6 @@ This component showcases several advanced patterns for Webflow Code Components:
 
 - **Custom Hook (`useCMSCollectionItems`)** - Extracts CMS list items from Webflow slots using Shadow DOM slot APIs
 - **Custom Hook (`useMapbox`)** - Manages Mapbox GL JS instance lifecycle, marker creation, and bounds fitting
-- **Shadow DOM Style Injection** - Uses `useShadowGlobalStyles` hook to inject Webflow styles into the shadow root
 - **Data Attributes** - Reads `data-lat` and `data-lng` attributes from CMS items to position markers
 - **Element Cloning** - Clones popup content from CMS elements to display rich HTML in map popups
 - **Dynamic CSS Variables** - Uses CSS custom properties for flexible control positioning
